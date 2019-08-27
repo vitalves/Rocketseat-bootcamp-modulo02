@@ -30,6 +30,12 @@ class User extends Model {
     return this;
   }
 
+  // Associar tabelas
+  static associate(models) {
+    // this.hasOne(...) // tem um
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' }); // pertence ao
+  }
+
   // metodo para a verificacao de senha
   checkPassword(password) {
     return bcrypt.compare(password, this.password_hash);

@@ -1,4 +1,6 @@
 import express from 'express';
+// importa o path para trabalhar com caminhos dos arquivos
+import path from 'path';
 import routes from './routes';
 
 // importa o database
@@ -19,6 +21,11 @@ class App {
 
   middlewares() {
     this.server.use(express.json());
+    // express.static: servir aquivos estaticos
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
+    );
   }
 
   routes() {
