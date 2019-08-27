@@ -38,3 +38,5 @@ criar diretorio .editorconfig
 
 ### FIM PADRÕES DE CODIGO:
 
+
+git init para iniciar o git
