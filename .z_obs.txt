@@ -40,3 +40,4 @@ criar diretorio .editorconfig
 
 
 git init para iniciar o git
+alterar o commit
