@@ -1,21 +1,10 @@
-/*
- * PROXIMO:
- ********** Agendamento de serviço
- ********** Agendamento de serviço
- ********** Agendamento de serviço
- ********** Agendamento de serviço
- ********** Agendamento de serviço
- ********** Agendamento de serviço
- ********** Agendamento de serviço
- */
-
 /* AQUIVO QUE faz a conexao com o DB e correga os Models */
 import Sequelize from 'sequelize';
 
 // importa os Models
 import User from '../app/models/User';
 import File from '../app/models/File';
-import Appointment from '../app/models/Appointments';
+import Appointment from '../app/models/Appointment';
 
 // importa as configuracoes do DB
 import databaseConfig from '../config/database';

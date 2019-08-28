@@ -12,6 +12,7 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import ProviderController from './app/controllers/ProviderController';
+import AppointmentController from './app/controllers/AppointmentController';
 
 // middleware
 import authMiddleware from './app/moddlewares/auth';
@@ -49,6 +50,10 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 // rotas para providers
 routes.get('/providers', ProviderController.index);
+
+// rota para Appointments
+routes.get('/appointments', AppointmentController.index);
+routes.post('/appointments', AppointmentController.store);
 
 /* antes do sucrase:
 module.exports = routes; */
