@@ -6,6 +6,9 @@ import Appointment from '../models/Appointment';
 
 class AppointmentController {
   async index(req, res) {
+    // possibilita a paginacao
+    const { page = 1 } = req.query; // se 'page' nao for informado o valor e 1
+
     // seleciona todos
     const appointment = await Appointment.findAll({
       // onde: user_id = req.userId nao cancelados
@@ -14,6 +17,10 @@ class AppointmentController {
       order: ['date'],
       // Atibutos que serao usados: (pra nao mandar todos)
       attributes: ['id', 'date'],
+      // PAGINACAO
+      limit: 20,
+      offset: (page - 1) * 20, // 20 results por pagina
+      // FIM PAGINACAO
       // incluir os dados do prestador de servicos
       include: [
         {

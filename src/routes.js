@@ -13,6 +13,7 @@ import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import ProviderController from './app/controllers/ProviderController';
 import AppointmentController from './app/controllers/AppointmentController';
+import ScheduleController from './app/controllers/ScheduleController';
 
 // middleware
 import authMiddleware from './app/moddlewares/auth';
@@ -54,6 +55,9 @@ routes.get('/providers', ProviderController.index);
 // rota para Appointments
 routes.get('/appointments', AppointmentController.index);
 routes.post('/appointments', AppointmentController.store);
+
+// Agendamento de servicos (prestador de servico)
+routes.get('/schedule', ScheduleController.index);
 
 /* antes do sucrase:
 module.exports = routes; */

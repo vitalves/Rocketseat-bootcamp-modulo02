@@ -1,5 +1,6 @@
 /* AQUIVO QUE faz a conexao com o DB e correga os Models */
-import Sequelize from 'sequelize';
+import Sequelize from 'sequelize'; // POSTGRESS DB
+import mongoose from 'mongoose'; // MONGO DB
 
 // importa os Models
 import User from '../app/models/User';
@@ -14,9 +15,11 @@ const models = [User, File, Appointment];
 
 class Database {
   constructor() {
-    this.init();
+    this.init(); // POSTGRESS COM SEQUELIZE
+    this.mongo(); // MONGO COM MONGOOSE
   }
 
+  // BANCO POSTGRESS com Sequelize
   init() {
     // faz a conexao com o bd e carrega os models
     this.connection = new Sequelize(databaseConfig);
@@ -25,6 +28,15 @@ class Database {
     models
       .map(model => model.init(this.connection))
       .map(model => model.associate && model.associate(this.connection.models));
+  }
+
+  // BANCO MONGO com mongoose
+  mongo() {
+    this.mongoConnection = mongoose.connect(
+      // url de conexao do Mongo
+      'mongodb://localhost:27017/goberber', // mongo cria a base de dados
+      { useNewUrlParser: true, useFindAndModify: true } // configs
+    );
   }
 }
 

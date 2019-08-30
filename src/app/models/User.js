@@ -20,7 +20,7 @@ class User extends Model {
 
     // hook sao trechos de codigos executados de forma automatica baseada em acoes
     this.addHook('beforeSave', async user => {
-      // user.name = 'Diego'; // todo usuario receberia esse nome
+      // ex: user.name = 'Diego'; // todo usuario receberia esse nome
       if (user.password) {
         user.password_hash = await bcrypt.hash(user.password, 8);
       }
