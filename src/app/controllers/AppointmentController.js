@@ -1,8 +1,11 @@
 import * as Yup from 'yup'; // para validacao
-import { startOfHour, parseISO, isBefore } from 'date-fns'; // para datas
+import { startOfHour, parseISO, isBefore, format } from 'date-fns'; // para datas
+import pt from 'date-fns/locale/pt'; // Formata data para Portugues
+import { locale } from 'moment';
 import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
+import Notification from '../schemas/Notification'; // Schema Mongoose
 
 class AppointmentController {
   async index(req, res) {
@@ -97,6 +100,23 @@ class AppointmentController {
       provider_id,
       date,
     });
+
+    // NOTIFICAR AGENDAMENTO (Usando os Schemas do Mongoose/Mongo)
+    // Busca no BD o usuario
+    const user = await User.findByPk(req.userId);
+    // Forma a data
+    const formattedDate = format(
+      hourStart,
+      "'dia' dd 'de' MMMM', as' H:mm'h'",
+      { locale: pt }
+    );
+
+    await Notification.create({
+      content: `Novo agendamento de ${user.name} para ${formattedDate}`,
+      user: provider_id,
+      // read: nao precisa por tem padrao de FALSE
+    });
+    // FIM NOTIFICAR AGENDAMENTO (Usando os Schemas do Mongoose/Mongo)
 
     return res.json(appointment);
   }
