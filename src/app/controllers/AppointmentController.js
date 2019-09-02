@@ -58,6 +58,13 @@ class AppointmentController {
 
     const { provider_id, date } = req.body;
 
+    // verifica se o usuario tenat agendar com ele mesmo
+    if (provider_id === req.userId) {
+      return res
+        .status(401)
+        .json({ error: 'Nao e possivel agendar com si mesmo' });
+    }
+
     // verifica se o provider_is é um provedor de serviços
     const isProvider = await User.findOne({
       where: { id: provider_id, provider: true },
@@ -91,7 +98,6 @@ class AppointmentController {
     if (checkAvailability) {
       return res.status(400).json({ error: 'Data nao disponivel ' });
     }
-
     // FIM VERIFICACOES DE DATA E HORA
 
     // Criar no banco de dados

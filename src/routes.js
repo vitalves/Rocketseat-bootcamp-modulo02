@@ -14,6 +14,7 @@ import FileController from './app/controllers/FileController';
 import ProviderController from './app/controllers/ProviderController';
 import AppointmentController from './app/controllers/AppointmentController';
 import ScheduleController from './app/controllers/ScheduleController';
+import NotificationController from './app/controllers/NotificationController';
 
 // middleware
 import authMiddleware from './app/moddlewares/auth';
@@ -58,6 +59,10 @@ routes.post('/appointments', AppointmentController.store);
 
 // Agendamento de servicos (prestador de servico)
 routes.get('/schedule', ScheduleController.index);
+
+// Notificacoes
+routes.get('/notifications', NotificationController.index); // lista
+routes.put('/notifications/:id', NotificationController.update); // marca como lido
 
 /* antes do sucrase:
 module.exports = routes; */
