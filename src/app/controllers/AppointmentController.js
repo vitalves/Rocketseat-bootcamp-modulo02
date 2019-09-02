@@ -1,6 +1,6 @@
 import * as Yup from 'yup'; // para validacao
-import { startOfHour, parseISO, isBefore, format } from 'date-fns'; // para datas
-import pt from 'date-fns/locale/pt'; // Formata data para Portugues
+import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'; // para datas
+import pt from 'date-fns/locale/pt'; // Formata data para Portugues (tem pt-br)
 import { locale } from 'moment';
 import User from '../models/User';
 import File from '../models/File';
@@ -8,6 +8,7 @@ import Appointment from '../models/Appointment';
 import Notification from '../schemas/Notification'; // Schema Mongoose
 
 class AppointmentController {
+  // Lista agendamentos
   async index(req, res) {
     // possibilita a paginacao
     const { page = 1 } = req.query; // se 'page' nao for informado o valor e 1
@@ -46,6 +47,7 @@ class AppointmentController {
     return res.json(appointment);
   }
 
+  // cadastra agendamentos
   async store(req, res) {
     const schema = Yup.object().shape({
       provider_id: Yup.number().required(),
@@ -123,6 +125,38 @@ class AppointmentController {
       // read: nao precisa por tem padrao de FALSE
     });
     // FIM NOTIFICAR AGENDAMENTO (Usando os Schemas do Mongoose/Mongo)
+
+    return res.json(appointment);
+  }
+
+  // Apaga agendamentos
+  async delete(req, res) {
+    // buscar os dados do agendamento
+    const appointment = await Appointment.findByPk(req.params.id);
+
+    // verifica se o usuario logado e 'dono' do agendamento
+    if (appointment.user_id !== req.userId) {
+      return res.status(400).json({
+        error: 'Você não tem permissao para cancelar esse agendamento',
+      });
+    }
+
+    // subHours - Subtrai horas
+    const dateWithSub = subHours(appointment.date, 2); // subtrai 2h da data agendada
+
+    // verifica se a hora subtraida eh anterior a hora atual
+    if (isBefore(dateWithSub, new Date())) {
+      return res.status(401).json({
+        error:
+          'Voce so pode cancelar agendamentos com mais de 2 horas de antecedecia',
+      });
+    }
+
+    // Se OK: Insere a data atual no campo 'canceled_at'
+    appointment.canceled_at = new Date();
+
+    // salva no banco a agendamento completo com a alteracao
+    await appointment.save();
 
     return res.json(appointment);
   }

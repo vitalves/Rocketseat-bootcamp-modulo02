@@ -54,8 +54,9 @@ routes.post('/files', upload.single('file'), FileController.store);
 routes.get('/providers', ProviderController.index);
 
 // rota para Appointments
-routes.get('/appointments', AppointmentController.index);
-routes.post('/appointments', AppointmentController.store);
+routes.get('/appointments', AppointmentController.index); // lista
+routes.post('/appointments', AppointmentController.store); // cadastra
+routes.delete('/appointments/:id', AppointmentController.delete); // Apaga
 
 // Agendamento de servicos (prestador de servico)
 routes.get('/schedule', ScheduleController.index);
