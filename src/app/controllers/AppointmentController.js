@@ -1,7 +1,7 @@
 import * as Yup from 'yup'; // para validacao
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'; // para datas
 import pt from 'date-fns/locale/pt'; // Formata data para Portugues (tem pt-br)
-import { locale } from 'moment';
+// import { locale } from 'moment';
 import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
@@ -136,10 +136,17 @@ class AppointmentController {
     // buscar os dados do agendamento (include no User provider para o envio de email)
     const appointment = await Appointment.findByPk(req.params.id, {
       include: [
+        // usuario prestador de servico:
         {
           model: User,
           as: 'provider',
           attributes: ['name', 'email'],
+        },
+        // usuario comum para enviar o nome no email:
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name'],
         },
       ],
     });
@@ -172,7 +179,17 @@ class AppointmentController {
     await Mail.sendMail({
       to: `${appointment.provider.name} <${appointment.provider.email}>`,
       subject: 'Agendamento cancelado',
-      text: 'atenção! Você tem um novo cancelamento!?',
+      // text: 'atenção! Você tem um novo cancelamento!?', // MODO S/ TEMPLATE
+      // Inclui template no email:
+      template: 'cancellation', // sem a extensao
+      // variaves enviadas ao template:
+      context: {
+        provider: appointment.provider.name,
+        user: appointment.user.name,
+        date: format(appointment.date, "'dia' dd 'de' MMMM', as' H:mm'h'", {
+          locale: pt,
+        }),
+      },
     });
 
     // retorna os dados atualizados
