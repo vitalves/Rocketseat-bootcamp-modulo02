@@ -6,6 +6,8 @@ import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
 import Notification from '../schemas/Notification'; // Schema Mongoose
+// envia email
+import Mail from '../../lib/Mail';
 
 class AppointmentController {
   // Lista agendamentos
@@ -129,10 +131,18 @@ class AppointmentController {
     return res.json(appointment);
   }
 
-  // Apaga agendamentos
+  // Apaga agendamentos (cancelamento)
   async delete(req, res) {
-    // buscar os dados do agendamento
-    const appointment = await Appointment.findByPk(req.params.id);
+    // buscar os dados do agendamento (include no User provider para o envio de email)
+    const appointment = await Appointment.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          as: 'provider',
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
 
     // verifica se o usuario logado e 'dono' do agendamento
     if (appointment.user_id !== req.userId) {
@@ -158,6 +168,14 @@ class AppointmentController {
     // salva no banco a agendamento completo com a alteracao
     await appointment.save();
 
+    // envia um email ao pretador de servco
+    await Mail.sendMail({
+      to: `${appointment.provider.name} <${appointment.provider.email}>`,
+      subject: 'Agendamento cancelado',
+      text: 'atenção! Você tem um novo cancelamento!?',
+    });
+
+    // retorna os dados atualizados
     return res.json(appointment);
   }
 }
