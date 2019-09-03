@@ -1,7 +1,6 @@
 import * as Yup from 'yup'; // para validacao
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'; // para datas
 import pt from 'date-fns/locale/pt'; // Formata data para Portugues (tem pt-br)
-// import { locale } from 'moment';
 import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
