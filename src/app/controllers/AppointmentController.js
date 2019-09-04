@@ -5,8 +5,14 @@ import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
 import Notification from '../schemas/Notification'; // Schema Mongoose
+
+// importa a JOB de cancelamento (Envio de email):
+import CancellationMail from '../jobs/CancellationMail';
+
 // envia email
-import Mail from '../../lib/Mail';
+// import Mail from '../../lib/Mail'; (nao necessario com a inclusao da Queue)
+// importa a fila para o envio de emails em background
+import Queue from '../../lib/Queue';
 
 class AppointmentController {
   // Lista agendamentos
@@ -175,20 +181,37 @@ class AppointmentController {
     await appointment.save();
 
     // envia um email ao pretador de servco
-    await Mail.sendMail({
-      to: `${appointment.provider.name} <${appointment.provider.email}>`,
-      subject: 'Agendamento cancelado',
-      // text: 'atenção! Você tem um novo cancelamento!?', // MODO S/ TEMPLATE
-      // Inclui template no email:
-      template: 'cancellation', // sem a extensao
-      // variaves enviadas ao template:
-      context: {
-        provider: appointment.provider.name,
-        user: appointment.user.name,
-        date: format(appointment.date, "'dia' dd 'de' MMMM', as' H:mm'h'", {
-          locale: pt,
-        }),
-      },
+    /*
+     * PECULIARIDADES SOBRE O ENVIO DE EMAILS:
+     * COM 'await': await Mail.sendMail({: a return aguarda o envio do email (+ lento)
+     * SEM 'await': Mail.sendMail({: a return e imediato, mas sem resposta de sucesso ou de falha
+      await Mail.sendMail({
+        to: `${appointment.provider.name} <${appointment.provider.email}>`,
+        subject: 'Agendamento cancelado',
+        // text: 'atenção! Você tem um novo cancelamento!?', // MODO S/ TEMPLATE
+        // Inclui template no email:
+        template: 'cancellation', // sem a extensao
+        // variaves enviadas ao template:
+        context: {
+          provider: appointment.provider.name,
+          user: appointment.user.name,
+          date: format(appointment.date, "'dia' dd 'de' MMMM', as' H:mm'h'", {
+            locale: pt,
+          }),
+        },
+      });
+     */
+
+    /*
+     * Para o envio em backgroung usa-se um banco CHAVE:VALOR (Redis)
+     *
+     */
+
+    // envia um email ao pretador de servco (ENVIA PARA A FILA - Queue -):
+    await Queue.add(CancellationMail.key, {
+      // dados do email:
+      appointment,
+      // teste: 'teste'
     });
 
     // retorna os dados atualizados
