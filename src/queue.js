@@ -4,6 +4,8 @@
  * OBS: precisa configurar o Sucrase no Package.json:
  "scripts": { //adiciona// ~> "queue": "nodemon src/queue.js";
  */
+// primeira importacao as variaveis de desenvolvimento
+import 'dotenv/config'; // process.env
 
 import Queue from './lib/Queue';
 

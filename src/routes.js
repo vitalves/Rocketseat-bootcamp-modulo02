@@ -15,6 +15,7 @@ import ProviderController from './app/controllers/ProviderController';
 import AppointmentController from './app/controllers/AppointmentController';
 import ScheduleController from './app/controllers/ScheduleController';
 import NotificationController from './app/controllers/NotificationController';
+import AvailableController from './app/controllers/AvailableController';
 
 // middleware
 import authMiddleware from './app/moddlewares/auth';
@@ -51,7 +52,8 @@ routes.put('/users', authMiddleware, UserController.update);
 routes.post('/files', upload.single('file'), FileController.store);
 
 // rotas para providers
-routes.get('/providers', ProviderController.index);
+routes.get('/providers', ProviderController.index); // lista
+routes.get('/providers/:providerId/available', AvailableController.index); // horarios disponiveis
 
 // rota para Appointments
 routes.get('/appointments', AppointmentController.index); // lista

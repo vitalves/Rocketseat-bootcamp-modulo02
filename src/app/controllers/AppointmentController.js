@@ -26,9 +26,10 @@ class AppointmentController {
       where: { user_id: req.userId, canceled_at: null },
       // ordenar por dada
       order: ['date'],
-      // Atibutos que serao usados: (pra nao mandar todos)
-      attributes: ['id', 'date'],
-      // PAGINACAO
+      // Atibutos que serao usados: (pra nao mandar todos):
+      // 'past' e 'cancelable' sao um campos VIRTUAL
+      attributes: ['id', 'date', 'past', 'cancelable'],
+      // PAGINACAO:
       limit: 20,
       offset: (page - 1) * 20, // 20 results por pagina
       // FIM PAGINACAO

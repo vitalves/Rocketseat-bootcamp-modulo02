@@ -1,4 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
+// importa o date-fns para trabalha com a data no campo virtual 'PAST'
+import { isBefore, subHours } from 'date-fns';
 
 class Appointment extends Model {
   static init(sequelize) {
@@ -6,6 +8,22 @@ class Appointment extends Model {
       {
         date: Sequelize.DATE,
         canceled_at: Sequelize.DATE,
+        // DADOS ADICIONAIS: (VIRTUAL :: nao esta no DB)
+        // retorna True se o horario ja passou e False para o contrario
+        past: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return isBefore(this.date, new Date()); // true ou Flase
+          },
+        },
+        // Informa se o agendamento ainda esta no prazo que possa ser cancelado
+        cancelable: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            // verifica a hora atual esta ha mais de 2h antes da data agendada
+            return isBefore(new Date(), subHours(this.date, 2)); // true ou Flase
+          },
+        },
       },
       {
         sequelize,

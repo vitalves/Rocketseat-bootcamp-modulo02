@@ -34,7 +34,7 @@ class Database {
   mongo() {
     this.mongoConnection = mongoose.connect(
       // url de conexao do Mongo
-      'mongodb://localhost:27017/gobarber', // mongo cria a base de dados
+      process.env.MONGO_URL, // mongo cria a base de dados
       { useNewUrlParser: true, useFindAndModify: true } // configs
     );
   }
