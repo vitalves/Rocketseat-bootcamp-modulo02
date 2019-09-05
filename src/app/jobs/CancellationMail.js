@@ -14,7 +14,7 @@ class CancellationMail {
     // no 'data' vai estar todas as info que vai chegar para o envio de email
     const { appointment } = data;
 
-    console.log('A fila executou');
+    // console.log('A fila executou');
 
     //  DADOS DO ENVIO DO EMAIL DE CANCELAMENTO DE AGENDAMENTO (AppointmentController)
     await Mail.sendMail({

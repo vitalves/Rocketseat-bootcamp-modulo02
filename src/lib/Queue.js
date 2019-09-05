@@ -19,7 +19,7 @@ class Queue {
     this.init();
   }
 
-  // parte de inicicialização das filas:
+  // parte de inicicializacao das filas:
   init() {
     // percorrer o jobs
     jobs.forEach(({ key, handle }) => {
@@ -42,11 +42,16 @@ class Queue {
   processQueue() {
     // percorre cada um do Jobs
     jobs.forEach(job => {
-      // buscar o bee e o handle da fila relacionada ao Jobs
+      // buscar o bee e o handle da fila relacionada ao Jobs:
       const { bee, handle } = this.queues[job.key];
-      // processa:
-      bee.process(handle);
+      // processa: // on('event'):: ouve eventos: error, succeeded, failed...
+      bee.on('failed', this.handleFailure).process(handle);
     });
+  }
+
+  // metodo usado para tratar o evento 'failed' :: on('failed')
+  handleFailure(job, err) {
+    console.log(`Queue ${job.queue.name}: FAILED`, err);
   }
 }
 
