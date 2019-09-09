@@ -28,7 +28,10 @@ class SessionController {
     const { email, password } = req.body;
 
     // busca o usuario no banco
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      // where: { email: req.body.email },
+      where: { email },
+    });
 
     // se o usuario nao existir no BD
     if (!user) {
