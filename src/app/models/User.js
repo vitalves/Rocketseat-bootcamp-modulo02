@@ -26,7 +26,7 @@ class User extends Model {
       }
     });
 
-    // retorn o modulo que acabou de ser inicializado
+    // retorna o modulo que acabou de ser inicializado
     return this;
   }
 
