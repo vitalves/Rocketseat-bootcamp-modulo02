@@ -9,7 +9,7 @@ import { extname, resolve } from 'path';
 export default {
   // chaves:
   storage: multer.diskStorage({
-    // destino do arquivo:
+    // destino do arquivo: (os diretorios '/tmp/uploads' sao criados)
     destination: resolve(__dirname, '..', '..', 'tmp', 'uploads'),
     // nome do arquivo:
     filename: (req, file, cb) => {
