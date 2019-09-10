@@ -92,7 +92,7 @@ class UserController {
     // somente se o usuario estiver querendo alterar a senha (oldPassword &&)
     // ou seja, se inserir a senha antiga
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
-      return res.status(401).json({ error: 'Senha atual inválida' });
+      return res.status(401).json({ error: 'Senha atual incorreta' });
     }
 
     // Atualiza no banco
