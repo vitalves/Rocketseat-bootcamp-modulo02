@@ -30,7 +30,7 @@ class Appointment extends Model {
       }
     );
     // retorn o modulo que acabou de ser inicializado
-    return this;
+    return this; // essencial para o relacionamento entre tabelas
   }
 
   static associate(models) {
