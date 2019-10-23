@@ -4,6 +4,8 @@ import 'dotenv/config'; // process.env
 import express from 'express';
 // importa o path para trabalhar com caminhos dos arquivos
 import path from 'path';
+// restringir acessos a API:
+import cors from 'cors';
 // tratar os erros retornados
 import Youch from 'youch';
 
@@ -45,6 +47,10 @@ class App {
   middlewares() {
     // Tratamento de erros com Sentry
     this.server.use(Sentry.Handlers.requestHandler()); // antes de tds as rotas
+
+    // define endereços que podem acessar a API
+    // this.server.use(cors({ origin: 'https://rocketseat.com.br' })); // em producao
+    this.server.use(cors()); // em desenvolvimento
 
     this.server.use(express.json());
     // express.static: servir aquivos estaticos
