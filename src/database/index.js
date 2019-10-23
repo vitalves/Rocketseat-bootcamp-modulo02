@@ -35,7 +35,11 @@ class Database {
     this.mongoConnection = mongoose.connect(
       // url de conexao do Mongo
       process.env.MONGO_URL, // mongo cria a base de dados
-      { useNewUrlParser: true, useFindAndModify: true } // configs
+      {
+        useNewUrlParser: true,
+        useFindAndModify: true,
+        useUnifiedTopology: true,
+      } // configs
     );
   }
 }
