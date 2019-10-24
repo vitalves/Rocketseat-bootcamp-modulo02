@@ -2,6 +2,8 @@
 import * as Yup from 'yup'; // Yup se importação default (importa-se tudo)
 // importa o model de usuario
 import User from '../models/User';
+// importa o model de File para pegar o Avatar
+import File from '../models/File';
 
 class UserController {
   async store(req, res) {
@@ -100,13 +102,26 @@ class UserController {
     const user = await user.update(req.body);
     */
     // retorna dados:
-    const { id, name, provider } = await user.update(req.body);
+    // const { id, name, provider } = await user.update(req.body);
+    // insere os dados no banco
+    await user.update(req.body);
+
+    // refaz a busca pelo usuario pegando agora também o Avatar
+    const { id, name, avatar } = await User.findByPk(req.userId, {
+      include: [
+        {
+          model: 'File',
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
 
     return res.json({
       id,
       name,
       email,
-      provider,
+      avatar,
     });
   }
 }
