@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 
 // importa o usuario que vai logar
 import User from '../models/User';
+// import o model de files para pegar o avatar do usuário:
+import File from '../models/File';
 // importa a chave secretos de acesso e prazo de expiracao
 import authConfig from '../../config/auth';
 
@@ -31,6 +33,13 @@ class SessionController {
     const user = await User.findOne({
       // where: { email: req.body.email },
       where: { email },
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
     });
 
     // se o usuario nao existir no BD
@@ -44,12 +53,13 @@ class SessionController {
     }
     // se chegar aqui o email e senha foram conferidos e autenticados
     //  retornar os dados do usuario e gerar o TOKEN
-    const { id, name } = user;
+    const { id, name, avatar } = user;
     return res.json({
       user: {
         id,
         name,
         email,
+        avatar,
       },
       // gerando o token com o id, texto secreto e validade dentro
       // (authConfig) no arquivo config/auth
