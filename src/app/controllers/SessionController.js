@@ -53,12 +53,13 @@ class SessionController {
     }
     // se chegar aqui o email e senha foram conferidos e autenticados
     //  retornar os dados do usuario e gerar o TOKEN
-    const { id, name, avatar } = user;
+    const { id, name, avatar, provider } = user;
     return res.json({
       user: {
         id,
         name,
         email,
+        provider,
         avatar,
       },
       // gerando o token com o id, texto secreto e validade dentro
