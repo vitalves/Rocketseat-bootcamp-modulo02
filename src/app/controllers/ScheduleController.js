@@ -34,6 +34,14 @@ class ScheduleController {
           [Op.between]: [startOfDay(parsedDate), endOfDay(parsedDate)],
         },
       },
+      // inclue os dados do usuario e retorna o nome:
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name'],
+        },
+      ],
       // ordenar por data
       order: ['date'],
     });
