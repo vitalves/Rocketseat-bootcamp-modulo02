@@ -21,7 +21,7 @@ class ScheduleController {
 
     // busca os agendamentos
 
-    const appointments = await Appointment.findOne({
+    const appointments = await Appointment.findAll({
       where: {
         // consultor for o usuario logado
         provider_id: req.userId,
